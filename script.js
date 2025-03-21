@@ -14,8 +14,23 @@ function generateUniqueCode() {
 }
 
 async function sendEmail(email, code) {
-  console.log(`Sending email to ${email} with code: ${code}`);
-  return new Promise((resolve) => setTimeout(resolve, 1000));
+  const response = await fetch('https://send.api.mailtrap.io/api/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer YOUR_MAILTRAP_API_KEY',
+    },
+    body: JSON.stringify({
+      from: { email: 'noreply@vgames.run.place' },
+      to: [{ email }],
+      subject: 'Your VGames Verification Code',
+      text: `Your verification code is: ${code}`,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to send email');
+  }
 }
 
 async function isIpBlocked(ip) {
@@ -56,14 +71,16 @@ async function incrementIpAttempts(ip) {
   }
 }
 
-function getUserIp() {
-  return '127.0.0.1';
+async function getUserIp() {
+  const response = await fetch('https://api.ipify.org?format=json');
+  const data = await response.json();
+  return data.ip;
 }
 
 document.getElementById('registration-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const ip = getUserIp();
+  const ip = await getUserIp();
 
   if (await isIpBlocked(ip)) {
     showMessage('Your IP is blocked due to multiple failed attempts. Please try again later.', true);
@@ -85,7 +102,12 @@ document.getElementById('registration-form').addEventListener('submit', async (e
   }
 
   const code = generateUniqueCode();
-  await sendEmail(email, code);
+  try {
+    await sendEmail(email, code);
+  } catch (error) {
+    showMessage('Failed to send verification code. Please try again.', true);
+    return;
+  }
 
   const userCode = prompt('A verification code has been sent to your email. Please enter it here:');
   if (userCode !== code) {
