@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - Page Not Found | VGAMES</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      flex-direction: column;
+      background: url('http://www.vgames.run.place/vgameswhite.png') center/cover no-repeat fixed;
+      color: #fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+    }
+    .container {
+      background: rgba(0, 20, 137, 0.85);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 90%;
+      text-align: center;
+      border: 3px solid #ffb81c;
+      backdrop-filter: blur(5px);
+    }
+    .logo {
+      width: 180px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+    }
+    h1 {
+      color: #ffb81c;
+      margin-bottom: 20px;
+      font-size: 2.5em;
+    }
+    .error-message {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+    .game-container {
+      margin: 25px 0;
+      background: rgba(0, 119, 73, 0.7);
+      border-radius: 10px;
+      border-left: 5px solid #ffb81c;
+      position: relative;
+      overflow: hidden;
+    }
+    .game-label {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0,0,0,0.7);
+      color: #ffb81c;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 0.9em;
+      z-index: 10;
+    }
+    .game-frame {
+      width: 100%;
+      height: 450px;
+      border: none;
+    }
+    .timer {
+      margin: 20px 0;
+      font-size: 1em;
+      color: #ffb81c;
+    }
+    .home-btn {
+      display: inline-block;
+      background-color: #E03C31;
+      color: white;
+      padding: 12px 25px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 1.1em;
+      font-weight: bold;
+      border: 2px solid #ffb81c;
+      transition: all 0.3s;
+      margin-top: 15px;
+    }
+    .home-btn:hover {
+      background-color: #ffb81c;
+      transform: scale(1.05);
+    }
+    .flag-container {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="flag-container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200" viewBox="0 0 90 60">
+        <defs>
+          <clipPath id="b"><path d="m0 0 45 30L0 60z"/></clipPath>
+          <clipPath id="a"><path d="M0 0h90v60H0z"/></clipPath>
+        </defs>
+        <path fill="#E03C31" d="M0 0h90v30H45z"/>
+        <path fill="#001489" d="M0 60h90V30H45z"/>
+        <g clip-path="url(#a)" fill="none">
+          <path stroke="#FFF" stroke-width="20" d="M90 30H45L0 0v60l45-30"/>
+          <path fill="#000" stroke="#ffb81c" stroke-width="20" clip-path="url(#b)" d="m0 0 45 30L0 60"/>
+          <path stroke="#007749" stroke-width="12" d="m0 0 45 30h45M0 60l45-30"/>
+        </g>
+      </svg>
+    </div>
+
+    <img src="http://www.vgames.run.place/vgameswhite.png" alt="VGAMES Logo" class="logo">
+    <h1>404 - Page Not Found</h1>
+    
+    <div class="error-message" id="errorText">
+      The page you requested could not be found. Sorry for the inconvenience!
+    </div>
+
+    <div class="game-container">
+      <div class="game-label">Try this game instead</div>
+      <iframe id="gameFrame" class="game-frame" src="https://cloud.onlinegames.io/games/2025/construct/293/tank-arena/index-og.html"></iframe>
+    </div>
+
+    <div class="timer" id="timer">Redirecting in <span id="countdown">60</span> seconds...</div>
+
+    <a href="/" class="home-btn">Return to VGAMES Home</a>
+  </div>
+
+  <script>
+    // Show which page was not found
+    const path = window.location.pathname;
+    const errorText = document.getElementById('errorText');
+    if (path && path !== '/404.html') {
+      errorText.innerHTML = `The page <strong>"${path}"</strong> could not be found. Sorry for the inconvenience!`;
+    }
+
+    // Timer for redirection
+    let timeLeft = 60;
+    const timerElement = document.getElementById('countdown');
+    const gameFrame = document.getElementById('gameFrame');
+
+    const timerInterval = setInterval(() => {
+      timeLeft--;
+      timerElement.textContent = timeLeft;
+
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        window.location.href = "/";
+      }
+    }, 1000);
+
+    // Game interaction monitoring
+    let isPlaying = false;
+    let interactionTimeout;
+
+    const resetInteractionTimeout = () => {
+      clearTimeout(interactionTimeout);
+      interactionTimeout = setTimeout(() => {
+        if (isPlaying) {
+          alert("You've been inactive for 3 minutes. You'll be redirected to the home page.");
+          window.location.href = "/";
+        }
+      }, 180000);
+    };
+
+    gameFrame.addEventListener('mouseenter', () => {
+      isPlaying = true;
+      resetInteractionTimeout();
+    });
+
+    gameFrame.addEventListener('mouseleave', () => {
+      isPlaying = false;
+      resetInteractionTimeout();
+    });
+
+    resetInteractionTimeout();
+  </script>
+</body>
+</html>
