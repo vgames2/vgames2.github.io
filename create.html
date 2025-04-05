@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VGAMES - Create Account</title>
+    <link rel="stylesheet" href="createstyles/style.css">
+    <link rel="icon" href="favicon.png" type="image/png">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="STUDIO.png" alt="VGAMES Logo" class="logo">
+            <h1>Join VGAMES</h1>
+            <p>Create your account to access exclusive games and features</p>
+        </div>
+        
+        <div class="account-form">
+            <div id="error-message" class="error-message"></div>
+            
+            <form id="create-account-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required 
+                           placeholder="@example-32" pattern="@example-\d{2,}">
+                    <small>Must start with @example- followed by numbers</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required minlength="8">
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" id="submit-btn">
+                        <span id="button-text">Create Account</span>
+                        <div id="spinner" class="spinner hidden"></div>
+                    </button>
+                </div>
+            </form>
+            
+            <div class="login-link">
+                Already have an account? <a href="#">Sign in</a>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="scripts/create.js"></script>
+</body>
+</html>
